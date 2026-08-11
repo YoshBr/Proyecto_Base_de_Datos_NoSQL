@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Logística - CorreosDB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container my-4">
+    <div class="text-center mb-4">
+        <h1 class="text-primary fw-bold">Sistema de Gestión de Envíos y Paquetes</h1>
+        <p class="text-muted">CorreosDB — Plataforma Logística de Correos de Costa Rica</p>
+    </div>
+
+    
+    <ul class="nav nav-tabs nav-justified bg-white rounded-top shadow-sm flex-wrap" id="mainTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active fw-bold" id="paquetes-tab" data-bs-toggle="tab" data-bs-target="#paquetes-pane">Paquetes</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="envios-tab" data-bs-toggle="tab" data-bs-target="#envios-pane">Envíos</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="facturas-tab" data-bs-toggle="tab" data-bs-target="#facturas-pane">Facturas</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="historial-tab" data-bs-toggle="tab" data-bs-target="#historial-pane">Historial</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios-pane">Usuarios</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="repartidores-tab" data-bs-toggle="tab" data-bs-target="#repartidores-pane">Repartidores</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="rutas-tab" data-bs-toggle="tab" data-bs-target="#rutas-pane">Rutas</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="reportes-tab" data-bs-toggle="tab" data-bs-target="#reportes-pane">Reportes</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="sucursales-tab" data-bs-toggle="tab" data-bs-target="#sucursales-pane">Sucursales</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="casilleros-tab" data-bs-toggle="tab" data-bs-target="#casilleros-pane">Casilleros</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="comercios-tab" data-bs-toggle="tab" data-bs-target="#comercios-pane">Comercios</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="comprobantes-tab" data-bs-toggle="tab" data-bs-target="#comprobantes-pane">Comprobantes</button>
+        </li>
+    </ul>
+
+    <div class="tab-content bg-white p-4 border border-top-0 rounded-bottom shadow-sm">
+        
+       
+        <div class="tab-pane fade show active" id="paquetes-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Nuevo Paquete</div>
+                <div class="card-body">
+                    <form id="form-paquetes" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Código Tracking</label>
+                            <input type="text" class="form-control" id="paq-tracking" placeholder="Ej: CR-1001" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre Remitente</label>
+                            <input type="text" class="form-control" id="paq-remitente" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre Destinatario</label>
+                            <input type="text" class="form-control" id="paq-destinatario" placeholder="Ej: María Rodríguez" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Sucursal de Origen</label>
+                            <input type="text" class="form-control" id="paq-sucursal" placeholder="Ej: San José Central" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Descripción del Contenido</label>
+                            <input type="text" class="form-control" id="paq-descripcion" placeholder="Ej: Lote de Ropa" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Peso (kg)</label>
+                            <input type="number" step="0.1" class="form-control" id="paq-peso" placeholder="Ej: 2.5" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Estado del Envío</label>
+                            <select class="form-select" id="paq-estado" required>
+                                <option value="En Bodega">En Bodega</option>
+                                <option value="En Tránsito">En Tránsito</option>
+                                <option value="Entregado">Entregado</option>
+                            </select>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Paquete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Inventario Logístico de Paquetes</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Tracking</th><th>Remitente</th><th>Destinatario</th><th>Descripción</th><th>Peso</th><th>Sucursal</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody id="tabla-paquetes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="tab-pane fade" id="envios-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Nuevo Envío</div>
+                <div class="card-body">
+                    <form id="form-envios" class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Descripción del Paquete</label>
+                            <input type="text" class="form-control" id="env-descripcion" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Remitente</label>
+                            <input type="text" class="form-control" id="env-remitente" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contacto Remitente</label>
+                            <input type="text" class="form-control" id="env-con-remitente" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Destinatario</label>
+                            <input type="text" class="form-control" id="env-destinatario" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contacto Destinatario</label>
+                            <input type="text" class="form-control" id="env-con-destinatario" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Envío</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Colección de Envíos</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Paquete</th><th>Remitente</th><th>Contacto Rem.</th><th>Destinatario</th><th>Contacto Dest.</th></tr>
+                        </thead>
+                        <tbody id="tabla-envios"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="tab-pane fade" id="facturas-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Factura</div>
+                <div class="card-body">
+                    <form id="form-facturas" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Monto Total (₡)</label>
+                            <input type="number" step="0.01" class="form-control" id="fac-monto" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Impuestos (₡)</label>
+                            <input type="number" step="0.01" class="form-control" id="fac-impuesto" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Método de Pago</label>
+                            <select class="form-select" id="fac-metodo" required>
+                                <option value="Sinpe Movil">Sinpe Móvil</option>
+                                <option value="Tarjeta">Tarjeta</option>
+                                <option value="Efectivo">Efectivo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de Pago</label>
+                            <input type="date" class="form-control" id="fac-fecha" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Estado de Transacción</label>
+                            <input type="text" class="form-control" id="fac-estado" placeholder="Ej: Pagado, Pendiente" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Factura</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Registros Financieros</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Monto Total</th><th>Impuestos</th><th>Método</th><th>Fecha</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody id="tabla-facturas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+     
+        <div class="tab-pane fade" id="historial-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Punto de Control</div>
+                <div class="card-body">
+                    <form id="form-historial" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Código de Rastreo</label>
+                            <input type="text" class="form-control" id="his-codigo" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Estado Actual</label>
+                            <input type="text" class="form-control" id="his-estado" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">ID Mensajero</label>
+                            <input type="text" class="form-control" id="his-mensajero" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="his-fecha" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="his-hora" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Estado</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Historial Cronológico de Recorrido</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Código Rastreo</th><th>Estado</th><th>Fecha</th><th>Hora</th><th>Mensajero</th></tr>
+                        </thead>
+                        <tbody id="tabla-historial"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="tab-pane fade" id="usuarios-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Nuevo Usuario</div>
+                <div class="card-body">
+                    <form id="form-usuarios" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="usu-nombre" placeholder="Ej: Carlos Araya" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="usu-correo" placeholder="ejemplo@correos.go.cr" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="usu-telefono" placeholder="Ej: 88888888" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="usu-contrasena" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Rol Asignado</label>
+                            <select class="form-select" id="usu-rol" required>
+                                <option value="cliente común">Cliente Común</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="jefe de IT">Jefe de IT</option>
+                            </select>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Catálogo de Usuarios Registrados</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Rol</th></tr>
+                        </thead>
+                        <tbody id="tabla-usuarios"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+     
+        <div class="tab-pane fade" id="repartidores-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Repartidor</div>
+                <div class="card-body">
+                    <form id="form-repartidores" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">ID de Usuario Vinculado</label>
+                            <input type="text" class="form-control" id="rep-usuario-id" placeholder="ID de Mongo" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo de Transporte</label>
+                            <select class="form-select" id="rep-tipo-transporte" required>
+                                <option value="moto">Moto</option>
+                                <option value="carro">Carro</option>
+                                <option value="camión">Camión</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Número de Placa</label>
+                            <input type="text" class="form-control" id="rep-placa" placeholder="Ej: MOT-1234" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Zona Asignada</label>
+                            <input type="text" class="form-control" id="rep-zona" placeholder="Ej: Alajuela Centro" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Repartidor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Personal de Reparto en Campo</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Usuario</th><th>Transporte</th><th>Placa</th><th>Zona Asignada</th></tr>
+                        </thead>
+                        <tbody id="tabla-repartidores"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-pane fade" id="rutas-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Planificar Nueva Ruta</div>
+                <div class="card-body">
+                    <form id="form-rutas" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">ID del Repartidor</label>
+                            <input type="text" class="form-control" id="ruta-repartidor-id" placeholder="ID del Repartidor" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha Programada</label>
+                            <input type="date" class="form-control" id="ruta-fecha" required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center pt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ruta-completada">
+                                <label class="form-check-label fw-bold" for="ruta-completada">Ruta Completada</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Códigos de Tracking (separados por coma)</label>
+                            <input type="text" class="form-control" id="ruta-trackings" placeholder="Ej: CR-1001, CR-1002" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Ruta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Planificación de Rutas Diario</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Fecha Programada</th><th>Repartidor</th><th>Total Paquetes</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody id="tabla-rutas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="tab-pane fade" id="reportes-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Reporte Diario</div>
+                <div class="card-body">
+                    <form id="form-reportes" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha del Reporte</label>
+                            <input type="date" class="form-control" id="repdiario-fecha" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Total Recibidos (Nacional)</label>
+                            <input type="number" class="form-control" id="repdiario-recibidos" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Entregas Exitosas</label>
+                            <input type="number" class="form-control" id="repdiario-exitosas" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Paquetes Devueltos / Rebotados</label>
+                            <input type="number" class="form-control" id="repdiario-devueltos" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Reporte</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Consolidación Analítica Diaria</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Fecha</th><th>Total Recibidos</th><th>Entregas Exitosas</th><th>Devueltos</th></tr>
+                        </thead>
+                        <tbody id="tabla-reportes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+  
+        <div class="tab-pane fade" id="sucursales-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Sucursal</div>
+                <div class="card-body">
+                    <form id="form-sucursales" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre Sucursal</label>
+                            <input type="text" class="form-control" id="suc-nombre" placeholder="Ej: Sucursal San José Central" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="suc-provincia" placeholder="Ej: San José" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Encargado / Administrador</label>
+                            <input type="text" class="form-control" id="suc-encargado" placeholder="Ej: María Fernández" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Teléfonos de Contacto (separados por coma)</label>
+                            <input type="text" class="form-control" id="suc-telefonos" placeholder="Ej: 2222-1111, 2222-2222" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Sucursal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Catálogo de Oficinas y Centros de Distribución</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Sucursal</th><th>Provincia</th><th>Encargado</th><th>Teléfonos</th></tr>
+                        </thead>
+                        <tbody id="tabla-sucursales"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="tab-pane fade" id="casilleros-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Nuevo Casillero</div>
+                <div class="card-body">
+                    <form id="form-casilleros" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Código de Casillero</label>
+                            <input type="text" class="form-control" id="cas-codigo" placeholder="Ej: CAS-001" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">ID del Usuario</label>
+                            <input type="text" class="form-control" id="cas-usuario" placeholder="ID de Usuario" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tamaño</label>
+                            <select class="form-select" id="cas-tamano" required>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-select" id="cas-estado" required>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Casillero</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Inventario de Casilleros</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Código</th><th>Usuario ID</th><th>Tamaño</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody id="tabla-casilleros"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-pane fade" id="comercios-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Comercio Afiliado</div>
+                <div class="card-body">
+                    <form id="form-comercios" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Código de Comercio</label>
+                            <input type="text" class="form-control" id="com-codigo" placeholder="Ej: COM-100" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre del Comercio</label>
+                            <input type="text" class="form-control" id="com-nombre" placeholder="Ej: Tienda Virtual CR" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Representante / Contacto</label>
+                            <input type="text" class="form-control" id="com-contacto" placeholder="Ej: Ana Gómez" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">% Descuento</label>
+                            <input type="number" step="0.1" class="form-control" id="com-descuento" placeholder="Ej: 10" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Comercio</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Red de Comercios Afiliados</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Código</th><th>Comercio</th><th>Representante</th><th>Descuento</th></tr>
+                        </thead>
+                        <tbody id="tabla-comercios"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="tab-pane fade" id="comprobantes-pane">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Registrar Comprobante</div>
+                <div class="card-body">
+                    <form id="form-comprobantes" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Código de Comprobante</label>
+                            <input type="text" class="form-control" id="comp-codigo" placeholder="Ej: COMP-500" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Monto Cancelado (₡)</label>
+                            <input type="number" step="0.01" class="form-control" id="comp-monto" placeholder="Ej: 15000" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha de Emisión</label>
+                            <input type="date" class="form-control" id="comp-fecha" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Detalle de la Transacción</label>
+                            <input type="text" class="form-control" id="comp-detalle" placeholder="Ej: Pago por servicio de apartado postal" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-success fw-bold">Guardar Comprobante</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">Historial de Comprobantes</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr><th>Código</th><th>Monto</th><th>Fecha Emisión</th><th>Detalle</th></tr>
+                        </thead>
+                        <tbody id="tabla-comprobantes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
